@@ -5,7 +5,7 @@ ARG CONTAINER_PACKAGE_URL
 ARG TZ
 
 ## 设置APK源
-RUN sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories
+#RUN sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories
 
 # 更新源(tzdata、zeromq是为了处理时区文件不存在的问题)
 ENV G=g++
@@ -26,18 +26,7 @@ RUN docker-php-ext-install -j$(nproc) pdo_mysql \
 RUN apk add gnu-libiconv libstdc++ --no-cache --repository \
  http://${CONTAINER_PACKAGE_URL}/alpine/edge/community/ --allow-untrusted
 
-
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
-
-# Install Swoole extensions (由于swoole与ext-async必须版本一致,所以采用下载的方式)
-ENV SWOOLE_VERSION=4.4.14
-RUN cd /home && wget -O swoole.zip https://github.com/swoole/swoole-src/archive/v$SWOOLE_VERSION.zip \
-    && unzip swoole.zip && cd swoole-src-$SWOOLE_VERSION && phpize && ./configure && make && make install \
-    && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
-# 因为swoole4.3+版本需要async支持
-RUN cd /home && wget -O ext_async.zip https://github.com/swoole/ext-async/archive/v$SWOOLE_VERSION.zip \
-    && unzip ext_async.zip && cd ext-async-$SWOOLE_VERSION && phpize && ./configure && make -j 4 && make install \
-    && echo "extension=swoole_async.so" > /usr/local/etc/php/conf.d/swoole_async.ini
 
 ENV REDIS_EXTENSIONS_VERSION=5.1.1
 # Install Redis extensions
