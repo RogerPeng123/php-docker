@@ -10,7 +10,7 @@ ARG TZ
 # 更新源(tzdata、zeromq是为了处理时区文件不存在的问题)
 ENV G=g++
 RUN apk --update add --no-cache --virtual .build-deps autoconf $G libtool make curl-dev gettext-dev  \
- linux-headers git re2c tzdata zeromq shadow --repository http://${CONTAINER_PACKAGE_URL}/alpine/v3.4/main/ --allow-untrusted
+ linux-headers git re2c tzdata zeromq shadow --repository http://${CONTAINER_PACKAGE_URL}/alpine/v3.11/main/ --allow-untrusted
 
 # 安装php扩展
 RUN docker-php-ext-install -j$(nproc) pdo_mysql \
