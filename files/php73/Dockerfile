@@ -5,11 +5,11 @@ ARG CONTAINER_PACKAGE_URL
 ARG TZ
 
 ## 设置APK源
-RUN sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories
+#RUN sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories
 
 # 更新源(tzdata、zeromq是为了处理时区文件不存在的问题)
 ENV G=g++
-RUN apk --update add --no-cache --virtual .build-deps autoconf $G libtool make curl-dev gettext-dev  \
+RUN yum install autoconf $G libtool make curl-dev gettext-dev  \
  linux-headers git re2c tzdata zeromq shadow
 
 # 安装php扩展
@@ -23,8 +23,7 @@ RUN docker-php-ext-install -j$(nproc) pdo_mysql \
     && docker-php-ext-install opcache
 
 # Fix: https://github.com/docker-library/php/issues/240
-RUN apk add gnu-libiconv libstdc++ --no-cache --repository \
- http://${CONTAINER_PACKAGE_URL}/alpine/edge/community/ --allow-untrusted
+RUN yum install gnu-libiconv libstdc++
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
