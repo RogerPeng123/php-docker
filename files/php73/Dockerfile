@@ -5,7 +5,7 @@ ARG CONTAINER_PACKAGE_URL
 ARG TZ
 
 ## 设置APK源
-RUN sed -i "s/dl-cdn.alpinelinux.org/${CONTAINER_PACKAGE_URL}/g" /etc/apk/repositories
+RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
 
 # 更新源(tzdata、zeromq是为了处理时区文件不存在的问题)
 ENV G=g++
